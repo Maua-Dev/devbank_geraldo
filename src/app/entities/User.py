@@ -1,14 +1,12 @@
 from typing import Tuple
 from ..errors.entity_errors import ParamNotValidated
-from ..enums.item_type_enum import ItemTypeEnum
-
 
 class User:
     name: str
     agency: int
     account: str
     current_balance: float
-    
+
     def __init__(self, name: str=None, agency: int=None, account: str=None, current_balance: float=None):
         validation_name = self.validate_name(name)
         if validation_name[0] is False:
@@ -46,18 +44,20 @@ class User:
             return (False, "Current balance is required")
         if type(current_balance) != float:
             return (False, "Current balance must be a float")
+        if current_balance < 0:
+            return (False, "Current balance can't be negative")
         return (True, "")
     
     @staticmethod
     def validate_agency(agency: int) -> Tuple[bool, str]:
         if agency is None:
             return (False, "agency is required")
-        if agency != int:
+        if type(agency) != int:
             return (False, "agency must be a integer")
         if not agency >= 1000 & agency <= 9999:
             return (False, "agency must be a positive number")
         return (True, "")
-    
+
     @staticmethod
     def validate_account(account: str) -> Tuple[bool, str]:
         if account is None:
@@ -68,7 +68,7 @@ class User:
             return (False, "account must be on the format XXXXX-X")
         if len(account) != 7:
             return (False, "account must be on the format XXXXX-X")
-        if not account[:4].isdigit():
+        if not account[:5].isdigit():
             return (False, "account must be on the format XXXXX-X")
         if not account[-1].isdigit():
             return (False, "account must be on the format XXXXX-X")
