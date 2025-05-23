@@ -73,3 +73,12 @@ class User:
         if not account[-1].isdigit():
             return (False, "account must be on the format XXXXX-X")
         return (True, "")
+    
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "agency": self.agency,
+            "account": self.account,
+            "current_balance": self.current_balance
+        }
+    

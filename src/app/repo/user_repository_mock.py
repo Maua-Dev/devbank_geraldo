@@ -21,7 +21,7 @@ class UserRepositoryMock(IUserRepository):
         return self.users.values()
     
     def get_user(self, name):
-        return self.users.get(name)
+        return self.users.get(name, None)
     
     def create_user(self, user: User):
         name = user.name
