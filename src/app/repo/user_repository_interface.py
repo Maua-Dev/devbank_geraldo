@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
-from src.app.entities.User import User
-from entities.transaction import Transaction
+from ..entities.User import User
+from ..entities.transaction import Transaction
 
 
 class IUserRepository(ABC):

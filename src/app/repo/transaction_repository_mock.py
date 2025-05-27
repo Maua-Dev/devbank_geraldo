@@ -1,6 +1,6 @@
 from typing import Dict, Optional, List
-from repo.transaction_repository_interface import ITransactionsRepository
-from entities.transaction import Transaction
+from ..repo.transaction_repository_interface import ITransactionsRepository
+from ..entities.transaction import Transaction
 
 class TransactionRepositoryMock(ITransactionsRepository):
     transactions: Dict[int, Transaction]

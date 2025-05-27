@@ -1,7 +1,7 @@
 import os
 from enum import Enum
-from repo.transaction_repository_interface import ITransactionsRepository
-from repo.user_repository_interface import IUserRepository
+from .repo.transaction_repository_interface import ITransactionsRepository
+from .repo.user_repository_interface import IUserRepository
 from .errors.environment_errors import EnvironmentNotFound
 
 
