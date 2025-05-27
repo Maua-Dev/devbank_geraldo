@@ -1,6 +1,6 @@
 import pytest
 from src.app.repo.user_repository_mock import UserRepositoryMock
-from src.app.entities.user import User
+from src.app.entities.User import User
 
 class Test_UserRepositoryMock:
     def test_get_all_users(self):

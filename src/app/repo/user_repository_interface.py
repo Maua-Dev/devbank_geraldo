@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
-from src.app.entities.user import User
+from src.app.entities.User import User
 from entities.transaction import Transaction
 
 

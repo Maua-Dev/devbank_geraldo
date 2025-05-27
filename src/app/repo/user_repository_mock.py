@@ -1,5 +1,5 @@
 from typing import Dict, List
-from entities.user import User
+from entities.User import User
 from repo.user_repository_interface import IUserRepository
 from entities.transaction import Transaction
 
