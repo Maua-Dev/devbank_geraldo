@@ -1,7 +1,7 @@
 from typing import Dict, List
-from src.app.entities.user import User
-from src.app.repo.user_repository_interface import IUserRepository
-from ..entities.transaction import Transaction
+from entities.user import User
+from repo.user_repository_interface import IUserRepository
+from entities.transaction import Transaction
 
 class UserRepositoryMock(IUserRepository):
     users: Dict[int, Transaction]

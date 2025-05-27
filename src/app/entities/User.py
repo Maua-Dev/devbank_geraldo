@@ -1,5 +1,5 @@
 from typing import Tuple
-from ..errors.entity_errors import ParamNotValidated
+from errors.entity_errors import ParamNotValidated
 
 class User:
     name: str

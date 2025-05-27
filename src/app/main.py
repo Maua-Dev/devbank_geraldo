@@ -1,6 +1,6 @@
 import time
 from fastapi import FastAPI, HTTPException
-from .environments import Environments
+from environments import Environments
 
 
 app = FastAPI()
