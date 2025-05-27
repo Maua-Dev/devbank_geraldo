@@ -1,13 +1,9 @@
 
-from enum import Enum
 import os
-
+from enum import Enum
 from src.app.repo.transaction_repository_interface import ITransactionsRepository
 from src.app.repo.user_repository_interface import IUserRepository
-
 from .errors.environment_errors import EnvironmentNotFound
-
-from .repo.item_repository_interface import IItemRepository
 
 
 class STAGE(Enum):
@@ -41,7 +37,7 @@ class Environments:
     def get_user_repo() -> IUserRepository:
         if Environments.get_envs().stage == STAGE.TEST:
             from .repo.user_repository_mock import UserRepositoryMock
-            return UserRepositoryMock
+            return UserRepositoryMock()
         else:
             raise EnvironmentNotFound("STAGE")
         
@@ -49,7 +45,7 @@ class Environments:
     def get_transaction_repo() -> ITransactionsRepository:
         if Environments.get_envs().stage == STAGE.TEST:
             from .repo.transaction_repository_mock import TransactionRepositoryMock
-            return TransactionRepositoryMock
+            return TransactionRepositoryMock()
         else:
             raise EnvironmentNotFound("STAGE")
 

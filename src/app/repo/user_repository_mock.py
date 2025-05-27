@@ -1,10 +1,7 @@
-from typing import Dict, Optional, List
-
+from typing import Dict, List
 from src.app.entities.user import User
 from src.app.repo.user_repository_interface import IUserRepository
-from ..enums.item_type_enum import ItemTypeEnum
 from ..entities.transaction import Transaction
-from ..entities.item import Item
 
 class UserRepositoryMock(IUserRepository):
     users: Dict[int, Transaction]
@@ -21,8 +18,11 @@ class UserRepositoryMock(IUserRepository):
         return self.users.values()
     
     def get_user(self, name):
-        return self.users.get(name, None)
-    
+        for user in self.users.values():
+            if user.name == name:
+                return user
+        return None
+        
     def create_user(self, user: User):
         name = user.name
         agency = user.agency
@@ -52,3 +52,11 @@ class UserRepositoryMock(IUserRepository):
         self.users[name] = user
         
         return user
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "agency": self.agency,
+            "account": self.account,
+            "current_balance": self.current_balance
+        }

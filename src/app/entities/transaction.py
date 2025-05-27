@@ -65,3 +65,11 @@ class Transaction:
         if timestamp < 0:
             return (False, "Timestamp can't be negative")
         return (True, "")
+    
+    def to_dict(self):
+        return {
+            "type": self.type,
+            "value": self.value,
+            "current_balance": self.current_balance,
+            "timestamp": self.timestamp,
+        }

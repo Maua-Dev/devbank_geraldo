@@ -1,6 +1,4 @@
 import pytest
-from src.app.entities.transaction import Transaction
-from src.app.enums.item_type_enum import ItemTypeEnum
 from src.app.repo.user_repository_mock import UserRepositoryMock
 from src.app.entities.user import User
 
@@ -16,7 +14,12 @@ class Test_UserRepositoryMock:
         repo = UserRepositoryMock()
         user = repo.get_user(name="Geraldo")
 
-        assert user == repo.users.get("Geraldo")
+        assert user.to_dict() == {
+            "name": "Geraldo",
+            "agency": 1000,
+            "account": "10000-5",
+            "current_balance": 1000.0
+        }
 
     def test_get_user_not_found(self):
         repo = UserRepositoryMock()

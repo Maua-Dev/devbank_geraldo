@@ -1,266 +1,167 @@
-from fastapi.exceptions import HTTPException
 import pytest
-from src.app.entities.item import Item
-from src.app.enums.item_type_enum import ItemTypeEnum
-from src.app.main import get_all_items, get_item, create_item, delete_item, update_item
-from src.app.repo.item_repository_mock import ItemRepositoryMock
+import time
+from fastapi.exceptions import HTTPException
+from src.app.main import deposit, get_all_transactions, get_user_data, withdrawal
+from src.app.repo.transaction_repository_mock import TransactionRepositoryMock
+from src.app.repo.user_repository_mock import UserRepositoryMock
 
 class Test_Main:
-    def test_get_all_items(self):
-        repo = ItemRepositoryMock()
-        response = get_all_items()
-        assert all([item_expect.to_dict() == item for item_expect, item in zip(repo.items.values(), response.get("items"))]) 
-        
-    def test_get_item(self):
-        repo = ItemRepositoryMock()
-        item_id = 1
-        response = get_item(item_id=item_id)
-        assert response == {
-            'item_id' : item_id,
-            'item': repo.items.get(item_id).to_dict()
+
+    def test_get_user_data(self):
+        repo = UserRepositoryMock()
+        user = get_user_data(name="Geraldo")
+
+        assert user == {
+            "name": "Geraldo",
+            "agency": 1000,
+            "account": "10000-5",
+            "current_balance": 1000.0
         }
-        
-    def test_get_item_id_is_none(self):
-        
-        item_id = None
+
+
+
+    def test_get_user_not_found(self):
+        repo = UserRepositoryMock()
         with pytest.raises(HTTPException) as err:
-            get_item(item_id=item_id)
+            get_user_data(name="naoexiste")
+
+        assert err.value.status_code == 404
+        assert err.value.detail == "User Not found"
+
+    def test_deposit(self):
+        repo = UserRepositoryMock()
+        body = {
+            "name": "Geraldo",
+            "2": 1,
+            "5": 1,
+            "10": 1,
+            "20": 1,
+            "50": 1,
+            "100": 1,
+            "200": 1
+        }
+        response = deposit(request=body)
+
+        assert response["current_balance"] == 1000.0 + (2 + 5 + 10 + 20 + 50 + 100 + 200)
+        assert response["timestamp"] > 0
+
+    def test_deposit_invalid_quantity(self):
+        repo = UserRepositoryMock()
+        body = {
+            "name": "Geraldo",
+            "2": "errado",
+            "5": 1,
+            "10": 1,
+            "20": 1,
+            "50": 1,
+            "100": 1,
+            "200": 1
+        }
+        with pytest.raises(HTTPException) as err:
+            deposit(request=body)
+
+        assert err.value.status_code == 400
+        assert err.value.detail == "Invalid quantity for note 2"
+
+    def test_deposit_suspicious_amount(self):
+        repo = UserRepositoryMock()
+        body = {
+            "name": "Geraldo",
+            "2": 1000,
+            "5": 1000,
+            "10": 1000,
+            "20": 1000,
+            "50": 1000,
+            "100": 1000,
+            "200": 1000
+        }
+        with pytest.raises(HTTPException) as err:
+            deposit(request=body)
+
+        assert err.value.status_code == 403
+        assert err.value.detail == "Suspicious deposit amount"
+
+    def test_deposit_invalid_amount(self):
+        repo = UserRepositoryMock()
+        body = {
+            "name": "Geraldo",
+            "2": 0,
+            "5": 0,
+            "10": 0,
+            "20": 0,
+            "50": 0,
+            "100": 0,
+            "200": 0
+        }
+        with pytest.raises(HTTPException) as err:
+            deposit(request=body)
+
+        assert err.value.status_code == 400
+        assert err.value.detail == "Invalid deposit amount"
+
+    def test_withdrawal(self):
+        repo = UserRepositoryMock()
+        body = {
+            "name": "Geraldo",
+            "2": 1,
+            "5": 1,
+            "10": 1,
+            "20": 1,
+            "50": 1,
+            "100": 1,
+            "200": 1
+        }
+        response = withdrawal(request=body)
+
+        assert response["current_balance"] == 1000.0 - (2 + 5 + 10 + 20 + 50 + 100 + 200)
+        assert response["timestamp"] > 0
+
+    def test_withdrawal_invalid_quantity(self):
+        repo = UserRepositoryMock()
+        body = {
+            "name": "Geraldo",
+            "2": "errado",
+            "5": 1,
+            "10": 1,
+            "20": 1,
+            "50": 1,
+            "100": 1,
+            "200": 1
+        }
+        with pytest.raises(HTTPException) as err:
+            withdrawal(request=body)
+
+        assert err.value.status_code == 400
+        assert err.value.detail == "Invalid quantity for note 2"
     
-    def test_get_item_id_is_not_int(self):
-        item_id = '1'
-        with pytest.raises(HTTPException) as err:
-            get_item(item_id=item_id)
-            
-    def test_get_item_id_is_not_positive(self):
-        item_id = -1
-        with pytest.raises(HTTPException) as err:
-            get_item(item_id=item_id)
-            
-    def test_create_item(self):
-        repo = ItemRepositoryMock()
-        
+    def test_withdrawal_insufficient_balance(self):
+        repo = UserRepositoryMock()
         body = {
-            'item_id': 0,
-            'name': 'test',
-            'price': 1.0,
-            'item_type': 'TOY',
-            'admin_permission': False
-        }
-        response = create_item(request=body)
-        assert response == {'item_id': 0,'item': {'admin_permission': False, 'item_type': 'TOY', 'name': 'test', 'price': 1.0}}
-    
-    def test_create_item_conflict(self):
-        repo = ItemRepositoryMock()
-        
-        body = {
-            'item_id': 1,
-            'name': 'test',
-            'price': 1.0,
-            'item_type': 'TOY',
-            'admin_permission': False
+            "name": "Geraldo",
+            "2": 1000,
+            "5": 1000,
+            "10": 1000,
+            "20": 1000,
+            "50": 1000,
+            "100": 1000,
+            "200": 1000
         }
         with pytest.raises(HTTPException) as err:
-            create_item(request=body)
-    
-    def test_create_item_missing_id(self):
-        body = {
-            'name': 'test',
-            'price': 1.0,
-            'item_type': 'TOY',
-            'admin_permission': False
-        }
-        with pytest.raises(HTTPException) as err:
-            create_item(request=body)
-        
-    def test_create_item_id_is_not_int(self):
-        body = {
-            'item_id': '0',
-            'name': 'test',
-            'price': 1.0,
-            'item_type': 'TOY',
-            'admin_permission': False
-        }
-        with pytest.raises(HTTPException) as err:
-            create_item(request=body)
-    
-    def test_create_item_id_is_not_positive(self):
-        body = {
-            'item_id': -1,
-            'name': 'test',
-            'price': 1.0,
-            'item_type': 'TOY',
-            'admin_permission': False
-        }
-        with pytest.raises(HTTPException) as err:
-            create_item(request=body)
-            
-    def test_create_item_missing_type(self):
-        body = {
-            'item_id': 1,
-            'name': 'test',
-            'price': 1.0,
-            'admin_permission': False
-        }
-        with pytest.raises(HTTPException) as err:
-            create_item(request=body)
-            
-    def test_create_item_item_type_is_not_string(self):
-        body = {
-            'item_id': 1,
-            'name': 'test',
-            'price': 1.0,
-            'item_type': 1,
-            'admin_permission': False
-        }
-        with pytest.raises(HTTPException) as err:
-            create_item(request=body)
-            
-    def test_create_item_item_type_is_not_valid(self):
-        body = {
-            'item_id': 1,
-            'name': 'test',
-            'price': 1.0,
-            'item_type': 'test',
-            'admin_permission': False
-        }
-        with pytest.raises(HTTPException) as err:
-            create_item(request=body)
-            
-    def test_create_item_param_not_validated(self):
-        body = {
-            'item_id': 1,
-            'name': '',
-            'price': 1.0,
-            'item_type': 'TOY',
-            'admin_permission': False,
-        }
-        with pytest.raises(HTTPException) as err:
-            create_item(request=body)
-            
-    def test_delete_item(self):
-        body = {
-            "item_id": 1
-        }
-        response = delete_item(request=body)
-        assert response == {'item_id': 1, 'item': {'name': 'Barbie', 'price': 48.9, 'item_type': 'TOY', 'admin_permission': False}}
-        
-    def test_delete_item_missing_id(self):
-        with pytest.raises(HTTPException) as err:
-            delete_item(request={})
-            
-    def test_delete_item_id_is_not_int(self):
-        body = {
-            "item_id": '1'
-        }
-        with pytest.raises(HTTPException) as err:
-            delete_item(request=body)
-            
-    def test_delete_item_id_not_found(self):
-        body = {
-            "item_id": 100
-        }
-        with pytest.raises(HTTPException) as err:
-            delete_item(request=body)
-            
-    def test_delete_item_id_not_positive(self):
-        body = {
-            "item_id": -100
-        }
-        with pytest.raises(HTTPException) as err:
-            delete_item(request=body)
-            
-    def test_delete_item_without_admin_permission(self):
-        body = {
-            "item_id": 4
-        }
-        with pytest.raises(HTTPException) as err:
-            delete_item(request=body)
-            
-    def test_update_item(self):
-        body = {
-            "item_id": 2,
-            "name": "test",
-            "price": 1.0,
-            "item_type": "TOY",
-            "admin_permission": False
-        }
-        response = update_item(request=body)
-        assert response == {'item_id': 2, 'item': {'name': 'test', 'price': 1.0, 'item_type': 'TOY', 'admin_permission': False}}
-        
-    def test_update_item_missing_id(self):
-        body = {
-            "name": "test",
-            "price": 1.0,
-            "item_type": "TOY",
-            "admin_permission": False
-        }
-        with pytest.raises(HTTPException) as err:
-            update_item(request=body)
-    
-    def test_update_item_id_is_not_int(self):
-        body = {
-            "item_id": "1",
-            "name": "test",
-            "price": 1.0,
-            "item_type": "TOY",
-            "admin_permission": False
-        }
-        with pytest.raises(HTTPException) as err:
-            update_item(request=body)
-            
-    def test_update_item_not_positive(self):
-        body = {
-            "item_id": -1,
-            "name": "test",
-            "price": 1.0,
-            "item_type": "test",
-            "admin_permission": False
-        }
-        with pytest.raises(HTTPException) as err:
-            update_item(request=body)
-            
-    def test_update_item_not_found(self):
-        body = {
-            "item_id": 1,
-            "name": "test",
-            "price": 1.0,
-            "item_type": "test",
-            "admin_permission": False
-        }
-        with pytest.raises(HTTPException) as err:
-            update_item(request=body)
-            
-    def test_update_item_without_admin_permission(self):
-        body = {
-            "item_id": 4,
-            "name": "test",
-            "price": 1.0,
-            "item_type": "TOY",
-            "admin_permission": False
-        }
-        with pytest.raises(HTTPException) as err:
-            update_item(request=body)
-    
-    def test_update_item_type_not_string(self):
-        body = {
-            "item_id": 1,
-            "name": "test",
-            "price": 1.0,
-            "item_type": 1,
-            "admin_permission": False
-        }
-        with pytest.raises(HTTPException) as err:
-            update_item(request=body)
-            
-    def test_update_item_type_not_valid(self):
-        
-        body = {
-            "item_id": 1,
-            "name": "test",
-            "price": 1.0,
-            "item_type": "test",
-            "admin_permission": False
-        }
-        with pytest.raises(HTTPException) as err:
-            update_item(request=body)
-            
+            withdrawal(request=body)
+
+        assert err.value.status_code == 403
+        assert err.value.detail == "Saldo insuficiente para transação"
+
+    def test_get_all_transactions(self):
+        repo = TransactionRepositoryMock()
+
+        response = get_all_transactions()
+
+        expected_transactions = [
+            {"type": "deposit", "value": 20.0, "current_balance": 1000.0, "timestamp": 20.0},
+            {"type": "deposit", "value": 40.0, "current_balance": 850.0, "timestamp": 35.0},
+            {"type": "withdrawal", "value": 120.0, "current_balance": 550.0, "timestamp": 45.0},
+            {"type": "withdrawal", "value": 160.0, "current_balance": 1500.0, "timestamp": 45.0},
+        ]
+
+        assert response.get("all_transactions") == expected_transactions

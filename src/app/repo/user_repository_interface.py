@@ -1,10 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional, Tuple
-
+from typing import List, Optional
 from src.app.entities.user import User
-from ..enums.item_type_enum import ItemTypeEnum
 from ..entities.transaction import Transaction
-from ..entities.item import Item
 
 
 class IUserRepository(ABC):
