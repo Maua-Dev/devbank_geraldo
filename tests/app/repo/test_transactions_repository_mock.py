@@ -5,13 +5,15 @@ class Test_TransactionRepositoryMock:
     def test_get_all_transactions(self):
         repo = TransactionRepositoryMock()
         
-        assert all([transaction_expect == transaction for transaction_expect, transaction in zip(repo.transactions.values(), repo.get_all_transactions())]) 
+        assert all([transaction_expect == transaction for transaction_expect, transaction in zip(repo.transactions, repo.get_all_transactions())]) 
         
     def test_get_transaction(self):
         repo = TransactionRepositoryMock()
         transaction = repo.get_transaction(type="withdrawal")
         
-        assert transaction == repo.transactions.get("withdrawal")
+        expected_transaction = next((t for t in repo.transactions if t.type == "withdrawal"), None)
+        assert transaction == expected_transaction
+
     
     def test_get_transaction_not_found(self):
         repo = TransactionRepositoryMock()
@@ -34,14 +36,16 @@ class Test_TransactionRepositoryMock:
         
     def test_delete_transaction(self):
         repo = TransactionRepositoryMock()
-        transaction_expected_to_be_deleted = repo.transactions.get(1)
+        transaction_expected_to_be_deleted = repo.transactions[1]
+
         len_before = len(repo.transactions)
-        
-        transaction = repo.delete_transaction(timestamp=1.0)
+
+        transaction = repo.delete_transaction(timestamp=transaction_expected_to_be_deleted.timestamp)
         len_after = len(repo.transactions)
-        
-        assert len_after == len_before - 1
+
         assert transaction == transaction_expected_to_be_deleted
+        assert len_after == len_before - 1
+
         
     def test_delete_transaction_not_found(self):
         repo = TransactionRepositoryMock()

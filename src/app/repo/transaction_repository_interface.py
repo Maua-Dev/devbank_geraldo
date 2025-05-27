@@ -35,5 +35,3 @@ class ITransactionsRepository(ABC):
         Deletes the transaction with the given id.
         If the transaction does not exist, returns None
         '''
-    
-    

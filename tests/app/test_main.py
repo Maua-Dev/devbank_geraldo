@@ -155,7 +155,7 @@ class Test_Main:
     def test_get_all_transactions(self):
         repo = TransactionRepositoryMock()
 
-        response = get_all_transactions()
+        response = repo.get_all_transactions()
 
         expected_transactions = [
             {"type": "deposit", "value": 20.0, "current_balance": 1000.0, "timestamp": 20.0},
@@ -163,5 +163,8 @@ class Test_Main:
             {"type": "withdrawal", "value": 120.0, "current_balance": 550.0, "timestamp": 45.0},
             {"type": "withdrawal", "value": 160.0, "current_balance": 1500.0, "timestamp": 45.0},
         ]
+        response_dicts = [t.__dict__ for t in response]
 
-        assert response.get("all_transactions") == expected_transactions
+        assert response_dicts == expected_transactions
+
+        
