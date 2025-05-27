@@ -1,11 +1,6 @@
 import time
 from fastapi import FastAPI, HTTPException
-from mangum import Mangum
-
 from .environments import Environments
-
-
-from .repo.user_repository_mock import UserRepositoryMock
 
 
 app = FastAPI()
