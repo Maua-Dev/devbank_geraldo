@@ -1,5 +1,4 @@
 import pytest
-from src.app.entities.user import User
 from src.app.entities.transaction import Transaction
 from src.app.errors.entity_errors import ParamNotValidated
 
