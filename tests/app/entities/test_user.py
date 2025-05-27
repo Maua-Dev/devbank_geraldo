@@ -1,5 +1,5 @@
 import pytest
-from src.app.entities.user import User
+from src.app.entities.User import User
 from src.app.errors.entity_errors import ParamNotValidated
 
 class Test_user:
