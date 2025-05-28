@@ -1,5 +1,6 @@
 import time
 from fastapi import FastAPI, HTTPException
+from fastapi.param_functions import Body
 from mangum import Mangum
 from .environments import Environments
 
@@ -21,7 +22,7 @@ def get_user_data(name: str):
     return user.to_dict()  
 
 @app.post("/deposit")
-def deposit(request: dict):
+def deposit(request: dict = Body(...)):
     user = user_repo.get_user(name=request.get("name"))
 
     if not user:
@@ -58,7 +59,7 @@ def deposit(request: dict):
     }
 
 @app.post("/withdrawal")
-def withdrawal(request: dict):
+def withdrawal(request: dict = Body(...)):
     user = user_repo.get_user(name=request.get("name"))
 
     if not user:
