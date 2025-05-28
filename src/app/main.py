@@ -22,8 +22,9 @@ def get_user_data():
     return user.to_dict()  
 
 @app.post("/deposit")
-def deposit(request: dict = Body(...)):
+def deposit(request: dict = Body(...), user_repo=user_repo):
     user = user_repo.get_user(user_id=1)
+
 
     if not user:
         raise HTTPException(status_code=404, detail="User Not found")
@@ -60,7 +61,7 @@ def deposit(request: dict = Body(...)):
     }
 
 @app.post("/withdrawal")
-def withdrawal(request: dict = Body(...)):
+def withdrawal(request: dict = Body(...), user_repo=user_repo):
     user = user_repo.get_user(user_id=1)
 
     if not user:

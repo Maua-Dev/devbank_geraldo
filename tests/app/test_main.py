@@ -101,7 +101,7 @@ class Test_Main:
             "100": 1,
             "200": 1
         }
-        response = withdrawal(request=body)
+        response = withdrawal(request=body, user_repo=repo)
 
         assert response["current_balance"] == 1000.0 - (2 + 5 + 10 + 20 + 50 + 100 + 200)
         assert response["timestamp"] > 0
