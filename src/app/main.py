@@ -13,7 +13,6 @@ transacation_repo = Environments.get_transaction_repo()
 @app.get("/")
 def get_user_data():    
 
-    user_repo = Environments.get_user_repo()
     user = user_repo.get_user(user_id=1)
 
     if not user:
