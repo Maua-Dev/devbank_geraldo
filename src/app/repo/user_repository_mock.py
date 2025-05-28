@@ -17,11 +17,8 @@ class UserRepositoryMock(IUserRepository):
     def get_all_users(self) -> List[User]:
         return self.users.values()
     
-    def get_user(self, name):
-        for user in self.users.values():
-            if user.name == name:
-                return user
-        return None
+    def get_user(self, user_id: int) -> User:
+        return self.users.get(user_id)
         
     def create_user(self, user: User):
         name = user.name

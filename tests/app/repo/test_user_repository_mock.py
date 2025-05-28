@@ -12,7 +12,7 @@ class Test_UserRepositoryMock:
 
     def test_get_user(self):
         repo = UserRepositoryMock()
-        user = repo.get_user(name="Geraldo")
+        user = repo.get_user(user_id=1)
 
         assert user.to_dict() == {
             "name": "Geraldo",
@@ -23,7 +23,7 @@ class Test_UserRepositoryMock:
 
     def test_get_user_not_found(self):
         repo = UserRepositoryMock()
-        user = repo.get_user(name="test")
+        user = repo.get_user(user_id=999)
 
         assert user is None
 

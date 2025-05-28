@@ -15,7 +15,7 @@ class IUserRepository(ABC):
         pass
     
     @abstractmethod
-    def get_user(self, name: str) -> Optional[User]:
+    def get_user(self, user_id: int) -> Optional[User]:
         '''
         Returns the users with the given id.
         If the users does not exist, returns None

@@ -9,7 +9,7 @@ class Test_Main:
 
     def test_get_user_data(self):
         repo = UserRepositoryMock()
-        user = get_user_data(name="Geraldo")
+        user = get_user_data()
 
         assert user == {
             "name": "Geraldo",
@@ -17,16 +17,6 @@ class Test_Main:
             "account": "10000-5",
             "current_balance": 1000.0
         }
-
-
-
-    def test_get_user_not_found(self):
-        repo = UserRepositoryMock()
-        with pytest.raises(HTTPException) as err:
-            get_user_data(name="naoexiste")
-
-        assert err.value.status_code == 404
-        assert err.value.detail == "User Not found"
 
     def test_deposit(self):
         repo = UserRepositoryMock()
