@@ -43,7 +43,8 @@ def deposit(request: dict = Body(...)):
     if total_deposit <= 0:
         raise HTTPException(status_code=400, detail="Invalid deposit amount")
     
-    current_balance = user.current_balance + total_deposit
+    user.current_balance = user.current_balance + total_deposit
+    current_balance = user.current_balance
 
     current_time = time.time() * 1000
 
@@ -80,7 +81,8 @@ def withdrawal(request: dict = Body(...)):
     if total_withdrawal < 0:
         raise HTTPException(status_code=403, detail="Saldo insuficiente para transação")
     
-    current_balance = user.current_balance - total_withdrawal
+    user.current_balance = user.current_balance - total_withdrawal
+    current_balance = user.current_balance
 
     current_time = time.time() * 1000
 
