@@ -1,5 +1,6 @@
 import time
 from fastapi import FastAPI, HTTPException
+from mangum import Mangum
 from .environments import Environments
 
 
@@ -226,4 +227,4 @@ def get_all_transactions():
     
 
 
-# handler = Mangum(app, lifespan="off")
+handler = Mangum(app, lifespan="off")
