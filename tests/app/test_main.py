@@ -1,7 +1,7 @@
 import pytest
 import time
 from fastapi.exceptions import HTTPException
-from src.app.main import deposit, get_all_transactions, get_user_data, withdrawal
+from src.app.main import deposit, get_user_data, withdrawal
 from src.app.repo.transaction_repository_mock import TransactionRepositoryMock
 from src.app.repo.user_repository_mock import UserRepositoryMock
 

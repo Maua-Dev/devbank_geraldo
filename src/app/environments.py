@@ -38,18 +38,18 @@ class Environments:
     @staticmethod
     def get_user_repo() -> IUserRepository:
         if Environments.get_envs().stage == STAGE.TEST:
-            from .repo.user_repository_mock import UserRepositoryMock 
-            return UserRepositoryMock
-        else:
-            raise EnvironmentNotFound("STAGE")
-        
+            if Environments._user_repo_mock_instance is None:
+                from .repo.user_repository_mock import UserRepositoryMock
+                Environments._user_repo_mock_instance = UserRepositoryMock()
+            return Environments._user_repo_mock_instance
+            
     @staticmethod
-    def get_transactions_repo() -> ITransactionsRepository:
+    def get_transaction_repo() -> ITransactionsRepository:
         if Environments.get_envs().stage == STAGE.TEST:
-            from .repo.transaction_repository_mock import ITransactionsRepository
-            return ITransactionsRepository
-        else:
-            raise EnvironmentNotFound("STAGE")
+            if Environments._transaction_repo_mock_instance is None:
+                from .repo.transaction_repository_mock import TransactionRepositoryMock
+                Environments._transaction_repo_mock_instance = TransactionRepositoryMock()
+            return Environments._transaction_repo_mock_instance
 
     @staticmethod
     def get_envs() -> "Environments":
