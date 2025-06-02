@@ -21,6 +21,13 @@ class IUserRepository(ABC):
         If the users does not exist, returns None
         '''
         pass
+
+    @abstractmethod
+    def set_balance(self, balance: float) -> User:
+        '''
+        Sets the balance of the account in the database
+        '''
+        pass
     
     @abstractmethod
     def create_user(self, name: str, agency: int, account: str, current_balance: float) -> Transaction:

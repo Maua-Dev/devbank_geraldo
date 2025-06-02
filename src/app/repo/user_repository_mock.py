@@ -32,6 +32,9 @@ class UserRepositoryMock(IUserRepository):
         user = self.users.pop(name, None)
         return user
         
+    def set_balance(self, balance: float) -> User:
+        self.account.current_balance = balance
+        return self.account
         
     def update_user(self, user_id: int, name:str, agency: int, account: str, current_balance: float) -> User:
         user = self.users.get(user_id)
