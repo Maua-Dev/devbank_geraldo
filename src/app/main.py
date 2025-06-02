@@ -47,13 +47,12 @@ def deposit(request: dict = Body(...), user_repo=user_repo):
     current_balance = user.current_balance
 
     current_time = time.time() * 1000
-
+    
     user_repo.update_user(
         name=user.name,
         agency=user.agency,
         account=user.account,
-        current_balance=current_balance
-    )
+        current_balance=current_balance)
 
     transaction = transacation_repo.create_transaction(
         aux_type="deposit",

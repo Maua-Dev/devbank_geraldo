@@ -33,20 +33,17 @@ class UserRepositoryMock(IUserRepository):
         return user
         
         
-    def update_user(self, name="Soller", agency= 1900, account= "15000-5", current_balance= 5000.0) -> User:
-        user = self.users.get(name, None)
-        if user is None:
-            return None
-        
-        if name is not None:
-            user.name = name
-        if agency is not None:
-            user.agency = agency
-        if account is not None:
-            user.account = account
-        if current_balance is not None:
-            user.current_balance = current_balance
-        self.users[name] = user
+    def update_user(self, user_id: int, name:str, agency: int, account: str, current_balance: float) -> User:
+        user = self.users.get(user_id)
+        if user:
+            user = User(
+                name=name,
+                agency=agency,
+                account=account,
+                current_balance=current_balance
+            )
+            return user
+        return None
         
         return user
 
