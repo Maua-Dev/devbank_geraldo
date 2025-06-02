@@ -66,8 +66,7 @@ def deposit(request: dict):
     }
 
 @app.post("/withdrawal")
-def withdrawal(request: dict, user_repo):
-    user_repo = Environments.get_user_repo()
+def withdrawal(request: dict):
     user = user_repo.get_user(user_id=1)
 
     if not user:
