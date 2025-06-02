@@ -95,9 +95,9 @@ class Test_Main:
             "name": "Geraldo",
             "200": 1
         }
-        response = withdrawal(request=body)
+        response = withdrawal(request=body, user_repo=repo)
 
-        assert response["current_balance"] == 1000.0 - (200)
+        assert response["current_balance"] == 1000.0 - (200.0)
         assert response["timestamp"] > 0
 
     def test_withdrawal_invalid_quantity(self):
@@ -113,7 +113,7 @@ class Test_Main:
             "200": 1
         }
         with pytest.raises(HTTPException) as err:
-            withdrawal(request=body)
+            withdrawal(request=body, user_repo=repo)
 
         assert err.value.status_code == 400
         assert err.value.detail == "Invalid quantity for note 2"
@@ -131,7 +131,7 @@ class Test_Main:
             "200": 1000
         }
         with pytest.raises(HTTPException) as err:
-            withdrawal(request=body)
+            withdrawal(request=body, user_repo=repo)
 
         assert err.value.status_code == 403
         assert err.value.detail == "Saldo insuficiente para transação"

@@ -66,7 +66,7 @@ def deposit(request: dict):
     }
 
 @app.post("/withdrawal")
-def withdrawal(request: dict):
+def withdrawal(request: dict, user_repo):
     user = user_repo.get_user(user_id=1)
 
     if not user:
@@ -87,9 +87,15 @@ def withdrawal(request: dict):
     if total_withdrawal < 0:
         raise HTTPException(status_code=403, detail="Saldo insuficiente para transação")
     
-    current_balance = user.current_balance - total_withdrawal
+    user.current_balance = user.current_balance - total_withdrawal
+    current_balance = user.current_balance
 
-    update_balance = user_repo.set_balance(current_balance=current_balance)
+    user_repo.update_user(
+        user_id=1,
+        name=user.name,
+        agency=user.agency,
+        account=user.account,
+        current_balance=current_balance)
 
     current_time = time.time() * 1000
 
