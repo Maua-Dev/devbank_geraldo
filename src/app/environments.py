@@ -35,18 +35,22 @@ class Environments:
     @staticmethod
     def get_user_repo() -> IUserRepository:
         if Environments.get_envs().stage == STAGE.TEST:
-            from .repo.user_repository_mock import UserRepositoryMock
-            return UserRepositoryMock()
+            if Environments._user_repo_mock_instance is None:
+                from .repo.user_repository_mock import UserRepositoryMock
+                Environments._user_repo_mock_instance = UserRepositoryMock()
+            return Environments._user_repo_mock_instance
         else:
-            raise EnvironmentNotFound("STAGE")
-        
+            raise EnvironmentNotFound(f"User repo not configured for stage: {Environments.get_envs().stage}")
+            
     @staticmethod
     def get_transaction_repo() -> ITransactionsRepository:
         if Environments.get_envs().stage == STAGE.TEST:
-            from .repo.transaction_repository_mock import TransactionRepositoryMock
-            return TransactionRepositoryMock()
+            if Environments._transaction_repo_mock_instance is None:
+                from .repo.transaction_repository_mock import TransactionRepositoryMock
+                Environments._transaction_repo_mock_instance = TransactionRepositoryMock()
+            return Environments._transaction_repo_mock_instance
         else:
-            raise EnvironmentNotFound("STAGE")
+            raise EnvironmentNotFound(f"Transaction repo not configured for stage: {Environments.get_envs().stage}")
 
     @staticmethod
     def get_envs() -> "Environments":
