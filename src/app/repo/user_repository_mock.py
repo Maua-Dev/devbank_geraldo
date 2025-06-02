@@ -36,16 +36,13 @@ class UserRepositoryMock(IUserRepository):
     def update_user(self, user_id: int, name:str, agency: int, account: str, current_balance: float) -> User:
         user = self.users.get(user_id)
         if user:
-            user = User(
-                name=name,
-                agency=agency,
-                account=account,
-                current_balance=current_balance
-            )
+            user.name=name,
+            user.agency=agency,
+            user.account=account,
+            user.current_balance=current_balance
             return user
         return None
-        
-        return user
+
 
     def to_dict(self):
         return {
