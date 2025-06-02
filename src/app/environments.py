@@ -13,8 +13,8 @@ class STAGE(Enum):
 
 
 class Environments:
-    _user_repo_mock_instance: 'IUserRepository' = None
-    _transaction_repo_mock_instance: 'ITransactionsRepository' = None 
+    _user_repo_mock_instance: IUserRepository = None
+    _transaction_repo_mock_instance: ITransactionsRepository = None 
 
     """
     Defines the environment variables for the application. You should not instantiate this class directly. Please use Environments.get_envs() method instead.
@@ -42,8 +42,6 @@ class Environments:
                 from .repo.user_repository_mock import UserRepositoryMock
                 Environments._user_repo_mock_instance = UserRepositoryMock()
             return Environments._user_repo_mock_instance
-        else:
-            raise EnvironmentNotFound(f"User repo not configured for stage: {Environments.get_envs().stage}")
             
     @staticmethod
     def get_transaction_repo() -> ITransactionsRepository:
@@ -52,8 +50,6 @@ class Environments:
                 from .repo.transaction_repository_mock import TransactionRepositoryMock
                 Environments._transaction_repo_mock_instance = TransactionRepositoryMock()
             return Environments._transaction_repo_mock_instance
-        else:
-            raise EnvironmentNotFound(f"Transaction repo not configured for stage: {Environments.get_envs().stage}")
 
     @staticmethod
     def get_envs() -> "Environments":
