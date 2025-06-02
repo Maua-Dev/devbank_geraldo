@@ -20,7 +20,7 @@ def get_user_data():
     return user.to_dict()  
 
 @app.post("/deposit")
-def deposit(request: dict = Body(...), user_repo=user_repo):
+def deposit(request: dict):
     user = user_repo.get_user(user_id=1)
 
 
@@ -66,7 +66,7 @@ def deposit(request: dict = Body(...), user_repo=user_repo):
     }
 
 @app.post("/withdrawal")
-def withdrawal(request: dict = Body(...), user_repo=user_repo):
+def withdrawal(request: dict):
     user = user_repo.get_user(user_id=1)
 
     if not user:

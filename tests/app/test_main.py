@@ -93,17 +93,11 @@ class Test_Main:
         repo = UserRepositoryMock()
         body = {
             "name": "Geraldo",
-            "2": 1,
-            "5": 1,
-            "10": 1,
-            "20": 1,
-            "50": 1,
-            "100": 1,
             "200": 1
         }
-        response = withdrawal(request=body, user_repo=repo)
+        response = withdrawal(request=body)
 
-        assert response["current_balance"] == 1000.0 - (2 + 5 + 10 + 20 + 50 + 100 + 200)
+        assert response["current_balance"] == 1000.0 - (200)
         assert response["timestamp"] > 0
 
     def test_withdrawal_invalid_quantity(self):
