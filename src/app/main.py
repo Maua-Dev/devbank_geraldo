@@ -83,14 +83,14 @@ def withdrawal(request: dict = Body(...), user_repo=user_repo):
             raise HTTPException(status_code=400, detail=f"Invalid quantity for note {note}")
         total_withdrawal += note * quantity
 
-    if total_withdrawal > current_balance:
+    if total_withdrawal > user.current_balance:
         raise HTTPException(status_code=403, detail="Saldo insuficiente para transação")
     if total_withdrawal < 0:
         raise HTTPException(status_code=403, detail="Saldo insuficiente para transação")
     
-    current_balance = current_balance - total_withdrawal
+    current_balance = user.current_balance - total_withdrawal
 
-    update_balance = user_repo.set_balance(balance=current_balance)
+    update_balance = user_repo.set_balance(current_balance=current_balance)
 
     current_time = time.time() * 1000
 
