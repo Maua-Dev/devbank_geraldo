@@ -49,6 +49,7 @@ def deposit(request: dict = Body(...), user_repo=user_repo):
     current_time = time.time() * 1000
     
     user_repo.update_user(
+        user_id=1,
         name=user.name,
         agency=user.agency,
         account=user.account,
@@ -91,6 +92,7 @@ def withdrawal(request: dict = Body(...), user_repo=user_repo):
     current_balance = user.current_balance
 
     user_repo.update_user(
+        user_id=1,
         name=user.name,
         agency=user.agency,
         account=user.account,
