@@ -13,6 +13,9 @@ class STAGE(Enum):
 
 
 class Environments:
+    _user_repo_mock_instance: 'IUserRepository' = None
+    _transaction_repo_mock_instance: 'ITransactionsRepository' = None 
+
     """
     Defines the environment variables for the application. You should not instantiate this class directly. Please use Environments.get_envs() method instead.
 
