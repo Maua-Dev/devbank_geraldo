@@ -65,7 +65,7 @@ def deposit(request: dict):
         "timestamp": current_time,
     }
 
-@app.post("/withdrawal")
+@app.post("/withdraw")
 def withdrawal(request: dict):
     user = user_repo.get_user(user_id=1)
 
